@@ -262,19 +262,8 @@
             <pre id="query-preview"></pre>
           </div>
 
-          <!-- Dynamic URL (API) - Recommended -->
-          <div class="url-section recommended">
-            <h4>
-              Dynamic URL (auto-update date)
-              <span class="recommended-badge">Recommended</span>
-            </h4>
-            <p class="url-desc">
-              Date updates automatically each time the feed is fetched.
-            </p>
-            <p class="url-note">
-              Note: This is a relative path. Copy and prepend your domain (e.g.,
-              <code>https://your-domain.com</code>) to get the full URL.
-            </p>
+          <div class="url-section">
+            <h4>Dynamic URL (auto-update date)</h4>
             <div class="url-display">
               <pre id="worker-url"></pre>
               <button id="copy-worker-url" title="Copy to clipboard">
@@ -286,7 +275,6 @@
           <!-- Static URL (with fixed date) -->
           <div class="url-section">
             <h4>Static URL (fixed date)</h4>
-            <p class="url-desc">Date is fixed at generation time.</p>
             <div class="url-display">
               <pre id="result-url"></pre>
               <button id="copy-url" title="Copy to clipboard">Copy</button>
@@ -294,42 +282,6 @@
           </div>
         </div>
 
-        <!-- Example Feeds Section -->
-        <div class="examples-section">
-          <h3>Example Feeds</h3>
-          <p class="section-description">Copy these URLs to your RSS reader.</p>
-          <ul class="example-list">
-            <li>
-              <span class="example-title"
-                >Latest Machine Learning papers in cs.LG</span
-              >
-              <div class="example-url-container">
-                <code class="example-url"
-                  >https://export.arxiv.org/api/query?search_query=cat:cs.LG&sortBy=submittedDate&sortOrder=descending&start=0&max_results=50</code
-                >
-                <button class="copy-example-btn" title="Copy">Copy</button>
-              </div>
-            </li>
-            <li>
-              <span class="example-title">LLM papers in cs.CL and cs.AI</span>
-              <div class="example-url-container">
-                <code class="example-url"
-                  >https://export.arxiv.org/api/query?search_query=ti:%22large+language+model%22+AND+(cat:cs.CL+OR+cat:cs.AI)&sortBy=submittedDate&sortOrder=descending&start=0&max_results=30</code
-                >
-                <button class="copy-example-btn" title="Copy">Copy</button>
-              </div>
-            </li>
-            <li>
-              <span class="example-title">All Computer Science papers</span>
-              <div class="example-url-container">
-                <code class="example-url"
-                  >https://export.arxiv.org/api/query?search_query=cat:cs&sortBy=submittedDate&sortOrder=descending&start=0&max_results=100</code
-                >
-                <button class="copy-example-btn" title="Copy">Copy</button>
-              </div>
-            </li>
-          </ul>
-        </div>
       </main>
 
       <footer>

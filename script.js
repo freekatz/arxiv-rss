@@ -394,7 +394,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize
     initializeCategoryList();
-    initializeExampleCopyButtons();
 
     // Update chip selection state
     function updateChipSelection() {
@@ -577,49 +576,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return formatCat(selectedCategories[0]);
         }
         return '(' + selectedCategories.map(formatCat).join(' OR ') + ')';
-    }
-
-    function initializeExampleCopyButtons() {
-        document.querySelectorAll('.copy-example-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const urlCode = this.parentElement.querySelector('.example-url');
-                const url = urlCode.textContent;
-
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(url).then(() => {
-                        showButtonCopySuccess(this);
-                    }).catch(() => {
-                        fallbackCopyExample(url, this);
-                    });
-                } else {
-                    fallbackCopyExample(url, this);
-                }
-            });
-        });
-    }
-
-    function fallbackCopyExample(text, btn) {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        showButtonCopySuccess(btn);
-    }
-
-    function showButtonCopySuccess(btn) {
-        const originalText = btn.textContent;
-        btn.textContent = 'Copied!';
-        btn.style.background = '#d4edda';
-        btn.style.borderColor = '#28a745';
-        btn.style.color = '#28a745';
-        setTimeout(() => {
-            btn.textContent = originalText;
-            btn.style.background = '';
-            btn.style.borderColor = '';
-            btn.style.color = '';
-        }, 1500);
     }
 
     // Import query string and fill the form
@@ -1007,8 +963,7 @@ document.addEventListener('DOMContentLoaded', function() {
             params.append('date', dateType);
         }
 
-        // Return only route part (without host)
-        return `/api/rss?${params.toString()}`;
+        return `${window.location.origin}/api/rss?${params.toString()}`;
     }
 
     // Copy Worker URL to clipboard
