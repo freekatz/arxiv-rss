@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>arXiv RSS Generator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="header-content">
+          <h1>arXiv RSS URL Generator</h1>
+          <p>Create custom RSS feeds for arXiv search queries</p>
+        </div>
+        <a
+          href="https://github.com/freekatz/arxiv-rss"
+          target="_blank"
+          class="github-link"
+          title="View on GitHub"
+        >
+          <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+            />
+          </svg>
+          <span>GitHub</span>
+        </a>
+      </header>
+
+      <main>
+        <div class="search-builder">
+          <h2>Build Your Search Query</h2>
+
+          <!-- Import Query Section -->
+          <div class="import-section">
+            <label class="section-label">Import Query:</label>
+            <div class="import-container">
+              <textarea
+                id="import-query"
+                rows="3"
+                placeholder='Paste query string, e.g.&#10;(abs:"3D Perception" OR abs:"3D Vision") AND (abs:"Point Cloud")'
+              ></textarea>
+              <button type="button" id="import-btn">Import</button>
+            </div>
+          </div>
+
+          <div class="query-container">
+            <div id="query-builder">
+              <!-- Query items will be rendered here -->
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button id="add-term" class="action-button">+ Add Term</button>
+            <button id="add-group" class="action-button">+ Add Group</button>
+            <button id="clear-all" class="action-button btn-clear">
+              Clear All
+            </button>
+          </div>
+
+          <div class="search-options">
+            <h3>Search Options</h3>
+
+            <!-- Categories Section -->
+            <div class="option-section">
+              <label class="section-label">Categories:</label>
+
+              <!-- Quick Select -->
+              <div class="quick-categories">
+                <span class="quick-label">Quick select:</span>
+                <div class="quick-category-chips">
+                  <button
+                    type="button"
+                    class="category-chip"
+                    data-category="cs.LG"
+                  >
+                    cs.LG
+                  </button>
+                  <button
+                    type="button"
+                    class="category-chip"
+                    data-category="cs.CL"
+                  >
+                    cs.CL
+                  </button>
+                  <button
+                    type="button"
+                    class="category-chip"
+                    data-category="cs.CV"
+                  >
+                    cs.CV
+                  </button>
+                  <button
+                    type="button"
+                    class="category-chip"
+                    data-category="cs.AI"
+                  >
+                    cs.AI
+                  </button>
+                  <button
+                    type="button"
+                    class="category-chip"
+                    data-category="stat.ML"
+                  >
+                    stat.ML
+                  </button>
+                  <button
+                    type="button"
+                    class="category-chip"
+                    data-category="cs.NE"
+                  >
+                    cs.NE
+                  </button>
+                </div>
+              </div>
+
+              <!-- Major Categories -->
+              <div class="major-categories">
+                <span class="quick-label">Major categories:</span>
+                <div class="major-category-chips">
+                  <button
+                    type="button"
+                    class="category-chip major"
+                    data-category="cs"
+                  >
+                    cs (all)
+                  </button>
+                  <button
+                    type="button"
+                    class="category-chip major"
+                    data-category="math"
+                  >
+                    math (all)
+                  </button>
+                  <button
+                    type="button"
+                    class="category-chip major"
+                    data-category="stat"
+                  >
+                    stat (all)
+                  </button>
+                  <button
+                    type="button"
+                    class="category-chip major"
+                    data-category="eess"
+                  >
+                    eess (all)
+                  </button>
+                  <button
+                    type="button"
+                    class="category-chip major"
+                    data-category="q-bio"
+                  >
+                    q-bio (all)
+                  </button>
+                  <button
+                    type="button"
+                    class="category-chip major"
+                    data-category="q-fin"
+                  >
+                    q-fin (all)
+                  </button>
+                </div>
+              </div>
+
+              <!-- Selected Categories Display -->
+              <div class="category-selector">
+                <div class="selected-categories" id="selected-categories">
+                  <span class="placeholder-text"
+                    >Click to browse all categories...</span
+                  >
+                </div>
+                <div class="category-dropdown" id="category-dropdown">
+                  <input
+                    type="text"
+                    id="category-search"
+                    placeholder="Search categories..."
+                    class="category-search-input"
+                  />
+                  <div class="category-list" id="category-list"></div>
+                </div>
+              </div>
+              <p class="option-hint">Leave empty to search all categories</p>
+            </div>
+
+            <!-- Date Range Section -->
+            <div class="option-section">
+              <label class="section-label">Date Range:</label>
+              <div class="date-range-selector">
+                <select id="date-range-type">
+                  <option value="none">All time</option>
+                  <option value="today">Today</option>
+                  <option value="yesterday" selected>Yesterday</option>
+                  <option value="week">Last 7 days</option>
+                  <option value="month">Last 30 days</option>
+                  <option value="custom">Custom range...</option>
+                </select>
+                <div
+                  class="custom-date-range"
+                  id="custom-date-range"
+                  style="display: none"
+                >
+                  <div class="date-input-group">
+                    <label for="date-from">From:</label>
+                    <input type="date" id="date-from" />
+                  </div>
+                  <div class="date-input-group">
+                    <label for="date-to">To:</label>
+                    <input type="date" id="date-to" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sort Options -->
+            <div class="option-row">
+              <div class="option-group">
+                <label for="sort-by">Sort by:</label>
+                <select id="sort-by">
+                  <option value="relevance">Relevance</option>
+                  <option value="lastUpdatedDate" selected>
+                    Last Updated Date
+                  </option>
+                  <option value="submittedDate">Submitted Date</option>
+                </select>
+              </div>
+
+              <div class="option-group">
+                <label for="sort-order">Order:</label>
+                <select id="sort-order">
+                  <option value="ascending">Ascending</option>
+                  <option value="descending" selected>Descending</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Max Results -->
+            <div class="option-group">
+              <label for="max-results">Max results:</label>
+              <input
+                type="number"
+                id="max-results"
+                value="50"
+                min="1"
+                max="30000"
+              />
+            </div>
+          </div>
+
+          <button id="generate-url" class="primary-button">
+            Generate RSS URL
+          </button>
+        </div>
+
+        <div class="result-container">
+          <h3>Your RSS Feed URL</h3>
+
+          <!-- Query Structure Preview -->
+          <div class="preview-section">
+            <h4>Query Structure Preview</h4>
+            <pre id="query-preview"></pre>
+          </div>
+
+          <!-- Dynamic URL (API) - Recommended -->
+          <div class="url-section recommended">
+            <h4>
+              Dynamic URL (auto-update date)
+              <span class="recommended-badge">Recommended</span>
+            </h4>
+            <p class="url-desc">
+              Date updates automatically each time the feed is fetched.
+            </p>
+            <p class="url-note">
+              Note: This is a relative path. Copy and prepend your domain (e.g.,
+              <code>https://your-domain.com</code>) to get the full URL.
+            </p>
+            <div class="url-display">
+              <pre id="worker-url"></pre>
+              <button id="copy-worker-url" title="Copy to clipboard">
+                Copy
+              </button>
+            </div>
+          </div>
+
+          <!-- Static URL (with fixed date) -->
+          <div class="url-section">
+            <h4>Static URL (fixed date)</h4>
+            <p class="url-desc">Date is fixed at generation time.</p>
+            <div class="url-display">
+              <pre id="result-url"></pre>
+              <button id="copy-url" title="Copy to clipboard">Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Example Feeds Section -->
+        <div class="examples-section">
+          <h3>Example Feeds</h3>
+          <p class="section-description">Copy these URLs to your RSS reader.</p>
+          <ul class="example-list">
+            <li>
+              <span class="example-title"
+                >Latest Machine Learning papers in cs.LG</span
+              >
+              <div class="example-url-container">
+                <code class="example-url"
+                  >https://export.arxiv.org/api/query?search_query=cat:cs.LG&sortBy=submittedDate&sortOrder=descending&start=0&max_results=50</code
+                >
+                <button class="copy-example-btn" title="Copy">Copy</button>
+              </div>
+            </li>
+            <li>
+              <span class="example-title">LLM papers in cs.CL and cs.AI</span>
+              <div class="example-url-container">
+                <code class="example-url"
+                  >https://export.arxiv.org/api/query?search_query=ti:%22large+language+model%22+AND+(cat:cs.CL+OR+cat:cs.AI)&sortBy=submittedDate&sortOrder=descending&start=0&max_results=30</code
+                >
+                <button class="copy-example-btn" title="Copy">Copy</button>
+              </div>
+            </li>
+            <li>
+              <span class="example-title">All Computer Science papers</span>
+              <div class="example-url-container">
+                <code class="example-url"
+                  >https://export.arxiv.org/api/query?search_query=cat:cs&sortBy=submittedDate&sortOrder=descending&start=0&max_results=100</code
+                >
+                <button class="copy-example-btn" title="Copy">Copy</button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </main>
+
+      <footer>
+        <div class="footer-content">
+          <p>
+            Based on the
+            <a
+              href="https://info.arxiv.org/help/api/user-manual.html"
+              target="_blank"
+              >arXiv API</a
+            >
+          </p>
+          <div class="footer-links">
+            <a href="https://github.com/freekatz/arxiv-rss" target="_blank">
+              <svg
+                height="16"
+                width="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
+                <path
+                  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"
+                />
+              </svg>
+              GitHub
+            </a>
+            <span class="footer-divider">|</span>
+            <a href="https://arxiv.org" target="_blank">arXiv.org</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
