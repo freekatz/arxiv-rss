@@ -15,6 +15,36 @@
  *   - date: yesterday | today | week | month | none | YYYYMMDD-YYYYMMDD
  */
 
+const MAX_RETRIES = 3;
+const BASE_DELAY_MS = 3000; // arXiv recommends >= 3s between requests
+
+async function fetchWithRetry(url) {
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    const response = await fetch(url);
+    const body = await response.text();
+
+    // arXiv returns 200 with error message in body, or 429 for rate limit
+    const isRateLimited =
+      response.status === 429 ||
+      (response.status === 200 && body.includes('Rate exceeded'));
+
+    if (!isRateLimited) {
+      if (!response.ok) {
+        throw new Error(`arXiv returned ${response.status}`);
+      }
+      return body;
+    }
+
+    if (attempt === MAX_RETRIES) {
+      throw new Error('Rate limit exceeded after retries');
+    }
+
+    // Exponential backoff: 3s, 6s, 12s
+    const delay = BASE_DELAY_MS * Math.pow(2, attempt);
+    await new Promise(resolve => setTimeout(resolve, delay));
+  }
+}
+
 export default async function handler(req, res) {
   // Get parameters (matching arXiv API naming)
   const query = req.query.search_query || '';
@@ -51,9 +81,8 @@ export default async function handler(req, res) {
   const dateRange = parseDateRange(dateParam);
 
   try {
-    // Fetch from arXiv
-    const response = await fetch(arxivUrl.toString());
-    let body = await response.text();
+    // Fetch from arXiv with retry on rate limit
+    let body = await fetchWithRetry(arxivUrl.toString());
 
     // Apply strict date filtering if date range is specified
     if (dateRange) {
@@ -66,7 +95,7 @@ export default async function handler(req, res) {
     res.setHeader('Cache-Control', 'public, max-age=3600');
     res.status(200).send(body);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch from arXiv' });
+    res.status(502).json({ error: 'Failed to fetch from arXiv: ' + error.message });
   }
 }
 
